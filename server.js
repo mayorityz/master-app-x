@@ -5,6 +5,7 @@ import users from './Components/Auth/auth.route.js'
 import dataEntry from './Components/Data/data.route.js'
 import drugs from './Components/Drugs/drugs.route.js'
 import erp from './Components/Erp/erp.route.js'
+import request from './Components/Request/request.route.js'
 
 const app = express()
 const PORT = process.env.PORT || 8084
@@ -27,6 +28,7 @@ app.use(`${ROUTE_PATH}/users`, users)
 app.use(`${ROUTE_PATH}/data-entry`, dataEntry)
 app.use(`${ROUTE_PATH}/drugs`, drugs)
 app.use(`${ROUTE_PATH}/erp`, erp)
+app.use(`${ROUTE_PATH}/request`, request)
 
 app.use((req, res, next) => {
   res.status(404).send("Sorry can't find that!")

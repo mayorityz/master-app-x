@@ -6,7 +6,6 @@ import Model from './auth.model.js'
  */
 
 export const CreateAccount = async (req, res) => {
-  console.log('body : ', req.body)
   try {
     const {
       firstname,
@@ -39,6 +38,23 @@ export const CreateAccount = async (req, res) => {
     })
   } catch (error) {
     console.log(error)
+  }
+}
+
+export const Login = async (req, res) => {
+  const { email, password } = req.body
+  try {
+    Model.find({ email, password }, { password: 0 }, (er, data) => {
+      if (er) {
+        return res
+          .status(500)
+          .json({ message: 'internal server error', status: 500 })
+      }
+
+      res.status(200).json({ message: 'Data Found!', status: 200, data })
+    })
+  } catch (error) {
+    res.status(500).json({ message: error.message, status: 500 })
   }
 }
 

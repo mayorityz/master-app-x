@@ -26,3 +26,27 @@ export const assignErp = async (req, res) => {
     })
   }
 }
+
+export const getDrugsAssignedToChva = async (req, res) => {
+  try {
+    let { id } = req.body
+    let find = Erp.findOne({ uid: id }, (er, result) => {
+      if (er) {
+        return res.status(500).json({
+          message: 'internal server error',
+          status: 500,
+        })
+      }
+      res.status(200).json({
+        message: 'Success',
+        status: 200,
+        data: result,
+      })
+    })
+  } catch (error) {
+    res.status(500).json({
+      message: `internal server error : ${error.message}`,
+      status: 500,
+    })
+  }
+}
