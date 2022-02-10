@@ -17,6 +17,8 @@ const learningSchema = new mongoose.Schema(
     },
     download: { type: Number, default: 0 },
     path: String,
+    description: String,
+    link: String,
   },
   { timestamps: true },
 )
