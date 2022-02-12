@@ -63,3 +63,17 @@ export const UploadTester = async (req, res) => {
   //   const uploader = async (path) => await uploads.uploads(path, 'Images')
   //   console.log(uploader)
 }
+
+export const findResourceById = async (req, res) => {
+  try {
+    let { id } = req.body
+    Learning.findOne({ _id: id }, (er, data) => {
+      if (er) {
+        return res.status(500).json({ message: er.message, statu: 500 })
+      }
+      res.status(200).json({ message: 'success', status: 200, data })
+    })
+  } catch (error) {
+    res.status(500).json({ message: error.message, status: 500 })
+  }
+}
