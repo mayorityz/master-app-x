@@ -14,6 +14,7 @@ const requestSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    chvaid: String,
     status: {
       type: String,
       default: 'pending',
