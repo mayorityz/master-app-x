@@ -71,10 +71,19 @@ export const myRequests = async (req, res) => {
 }
 
 export const PendingReqs = async (req, res) => {
-  chvaReqs.find({}, (err, data) => {
+  chvaReqs.find({ status: 'pending' }, (err, data) => {
     if (err) {
       console.log(err)
       res.status(500).json({ status: 500, message: `Error Occured` })
     } else res.status(200).json({ status: 200, message: `Success`, data })
+  })
+}
+
+export const makeAsComplete = async (req, res) => {
+  let { id } = req.body
+  chvaReqs.updateOne({ _id: id }, (err, result) => {
+    if (result)
+      res.status(200).json({ status: 200, message: 'updated successfully' })
+    else res.status(500).json({ status: 500, message: 'Internal Server Error' })
   })
 }
