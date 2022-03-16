@@ -81,7 +81,7 @@ export const PendingReqs = async (req, res) => {
 
 export const makeAsComplete = async (req, res) => {
   let { id } = req.body
-  chvaReqs.updateOne({ _id: id }, (err, result) => {
+  chvaReqs.updateOne({ _id: id }, { status: 'done' }, (err, result) => {
     if (result)
       res.status(200).json({ status: 200, message: 'updated successfully' })
     else res.status(500).json({ status: 500, message: 'Internal Server Error' })

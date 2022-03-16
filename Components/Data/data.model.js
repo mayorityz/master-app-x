@@ -14,6 +14,10 @@ const workDataSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
+    isComplete: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true },
 )
