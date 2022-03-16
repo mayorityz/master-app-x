@@ -1,5 +1,7 @@
 import Learning from './learning.model.js'
+import Activity from './Activities.model.js'
 import fs from 'fs'
+import CommentModel from './PostComments.model.js'
 // import { uploads } from '../../Cloudinary.js'
 
 export const CreateLearningMaterial = async (req, res) => {
@@ -72,6 +74,63 @@ export const findResourceById = async (req, res) => {
         return res.status(500).json({ message: er.message, statu: 500 })
       }
       res.status(200).json({ message: 'success', status: 200, data })
+    })
+  } catch (error) {
+    res.status(500).json({ message: error.message, status: 500 })
+  }
+}
+
+export const createNewActivity = async (req, res) => {
+  try {
+    let { id, action } = req.body
+    let freshActivities = new Activity({ uid: id, action })
+    freshActivities.save()
+    res.status(200)
+  } catch (error) {
+    res.status(500).json({ message: error.message, status: 500 })
+  }
+}
+
+export const getActivities = async (req, res) => {
+  try {
+    let { id } = req.body
+
+    Activity.find({ uid: id }, (err, response) => {
+      if (err) {
+        res.status(500).json({ message: error.message, status: 500 })
+      } else
+        res
+          .status(200)
+          .json({ status: 200, message: 'success', data: response })
+    })
+  } catch (error) {
+    res.status(500).json({ message: error.message, status: 500 })
+  }
+}
+
+export const postComment = async (req, res) => {
+  try {
+    let { uid, comment, postid } = req.body
+    console.log(req.body)
+    let newComment = new CommentModel({ uid, comment, postid })
+    newComment.save()
+    res.status(200).json({ message: 'success', status: 200 })
+  } catch (error) {
+    res.status(500).json({ message: error.message, status: 500 })
+  }
+}
+
+export const fetchComments = async (req, res) => {
+  try {
+    let { uid, postid } = req.body
+    CommentModel.find({ uid, postid }, (err, response) => {
+      if (err) {
+        res.status(500).json({ message: err.message, status: 500 })
+      } else {
+        res
+          .status(200)
+          .json({ status: 200, message: 'success', data: response })
+      }
     })
   } catch (error) {
     res.status(500).json({ message: error.message, status: 500 })
