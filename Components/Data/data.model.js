@@ -8,16 +8,11 @@ const workDataSchema = new mongoose.Schema(
     },
     description: {
       type: String,
-      required: true,
     },
     quantity: {
       type: Number,
-      required: true,
     },
-    isComplete: {
-      type: Boolean,
-      default: false,
-    },
+    assignment: Object,
   },
   { timestamps: true },
 )

@@ -4,8 +4,8 @@ import Users from '../Auth/auth.model.js'
 
 export const EnterEntry = async (req, res) => {
   try {
-    let { description, uid, quantity } = req.body
-    let newEntry = new WorkData({ description, uid, quantity })
+    let { uid, assignment } = req.body
+    let newEntry = new WorkData({ uid, assignment })
     newEntry.save((err, data) => {
       if (err) {
         console.log(err.message)
