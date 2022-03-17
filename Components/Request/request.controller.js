@@ -1,5 +1,6 @@
 import Requests from './request.model.js'
 import Erp from './../Erp/erp.model.js'
+import User from './../Auth/auth.model.js'
 
 export const makeRequest = async (req, res) => {
   try {
@@ -34,7 +35,7 @@ export const getMyRequest = async (req, res) => {
     let { uid } = req.body
     Requests.find(
       { uid: uid },
-      { request: 1, createdAt: 1 },
+      { request: 1, createdAt: 1, item: 1 },
       (er, response) => {
         if (er)
           res.status(500).json({ message: 'internal server error!', code: 500 })
@@ -48,13 +49,76 @@ export const getMyRequest = async (req, res) => {
 
 export const getAllRequests = async (req, res) => {
   try {
-    Requests.find({ status: 'pending' }, (er, response) => {
-      if (er)
-        res.status(500).json({ message: 'internal server error!', code: 500 })
-      res.status(200).json({ status: 200, data: response })
+    Requests.aggregate(
+      [
+        { $match: { status: 'pending' } },
+        { $group: { _id: '$uid', count: { $sum: 1 } } },
+      ],
+      (err, ress) => {
+        if (err)
+          return res
+            .status(500)
+            .json({ message: 'internal server error!', status: 500 })
+        res.status(200).json({ status: 200, data: ress })
+      },
+    )
+  } catch (error) {
+    console.log(error.message)
+  }
+}
+
+export const readRequest = async (req, res) => {
+  try {
+    let { uid } = req.body
+    User.findOne({ _id: uid }, (err, success) => {
+      if (err) {
+        return res
+          .status(500)
+          .json({ message: 'internal server error!', code: 500 })
+      } else {
+        Requests.find(
+          { uid: uid, status: 'pending' },
+          { request: 1, createdAt: 1, item: 1, uid: 1 },
+          (er, response) => {
+            if (er)
+              res
+                .status(500)
+                .json({ message: 'internal server error!', code: 500 })
+            res
+              .status(200)
+              .json({ status: 200, data: response, userinfo: success })
+          },
+        )
+      }
     })
   } catch (error) {
     console.log(error.message)
+  }
+}
+
+export const updateArequest = async (req, res) => {
+  try {
+    const { qty, comment, id, status, item, uid } = req.body
+    console.log(id)
+    Requests.updateOne(
+      { _id: id },
+      { status, response: { qty, comment } },
+      (err, response) => {
+        if (err) {
+        } else {
+          Erp.updateOne(
+            { uid: uid, 'drugs.drug': item },
+            { $set: { 'drugs.$.status': status } },
+            (errorr, resx) => {
+              console.log('here')
+              res.status(200).json({ status: 200, message: 'success' })
+            },
+          )
+        }
+      },
+    )
+  } catch (error) {
+    res.status(500).json({ message: 'internal server error!', code: 500 })
   }
 }
 

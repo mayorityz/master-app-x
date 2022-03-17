@@ -14,12 +14,7 @@ const requestSchema = new mongoose.Schema(
       type: String,
     },
     request: String,
-    response: {
-      date: String,
-      drug: String,
-      quantity: Number,
-      comment: String,
-    },
+    response: Object,
   },
   { timestamps: true },
 )
