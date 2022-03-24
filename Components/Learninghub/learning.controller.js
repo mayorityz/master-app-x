@@ -82,9 +82,14 @@ export const findResourceById = async (req, res) => {
 
 export const createNewActivity = async (req, res) => {
   try {
+    console.log('here')
+    console.log(req.body)
     let { id, action } = req.body
     let freshActivities = new Activity({ uid: id, action })
-    freshActivities.save()
+    freshActivities.save((errr, ress) => {
+      console.log(errr)
+      console.log(ress)
+    })
     res.status(200)
   } catch (error) {
     res.status(500).json({ message: error.message, status: 500 })
