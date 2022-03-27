@@ -20,6 +20,7 @@ const requestSchema = new mongoose.Schema(
       default: 'pending',
     },
     fullname: String,
+    requestBy: String,
   },
   { timestamps: true },
 )

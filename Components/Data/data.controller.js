@@ -49,9 +49,9 @@ export const getDatabyChva = async (req, res) => {
 }
 
 export const chvaRequest = async (req, res) => {
-  const { to, from, uid, fullname, chvaid } = req.body
+  const { to, from, uid, fullname, chvaid, requestBy } = req.body
 
-  let newReq = new chvaReqs({ to, from, uid, fullname, chvaid })
+  let newReq = new chvaReqs({ to, from, uid, fullname, chvaid, requestBy })
   newReq.save((err, res_) => {
     if (err) {
       console.log(err)
@@ -61,8 +61,8 @@ export const chvaRequest = async (req, res) => {
 }
 
 export const myRequests = async (req, res) => {
-  const { uid } = req.body
-  chvaReqs.find({ uid }, (err, data) => {
+  const { uid: requestBy } = req.body
+  chvaReqs.find({ requestBy }, (err, data) => {
     console.log(data)
     if (err) {
       res.status(500).json({ status: 500, message: `Error Occured` })
