@@ -35,7 +35,7 @@ export const getMyRequest = async (req, res) => {
     let { uid } = req.body
     Requests.find(
       { uid: uid },
-      { request: 1, createdAt: 1, item: 1 },
+      { request: 1, createdAt: 1, item: 1, response: 1, status: 1 },
       (er, response) => {
         if (er)
           res.status(500).json({ message: 'internal server error!', code: 500 })
@@ -99,7 +99,17 @@ export const readRequest = async (req, res) => {
 export const updateArequest = async (req, res) => {
   try {
     const { qty, comment, id, status, item, uid } = req.body
-    console.log(id)
+
+    if (qty === '') {
+      return res
+        .status(500)
+        .json({ status: 200, message: 'quantity must be at least zero' })
+    }
+
+    if (status === 'rejected') {
+      qty = 0
+    }
+
     Requests.updateOne(
       { _id: id },
       { status, response: { qty, comment } },
@@ -107,11 +117,20 @@ export const updateArequest = async (req, res) => {
         if (err) {
         } else {
           Erp.updateOne(
-            { uid: uid, 'drugs.drug': item },
-            { $set: { 'drugs.$.status': status } },
+            { uid, 'drugs.drug': item },
+            {
+              $set: { 'drugs.$.status': status },
+              $inc: {
+                'drugs.$.qty': parseFloat(qty),
+              },
+            },
             (errorr, resx) => {
               console.log('here')
-              res.status(200).json({ status: 200, message: 'success' })
+              console.log(resx)
+              console.log(errorr)
+              res
+                .status(200)
+                .json({ status: 200, message: 'Update Successful' })
             },
           )
         }
