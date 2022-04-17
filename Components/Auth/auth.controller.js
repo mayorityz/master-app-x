@@ -43,6 +43,7 @@ export const CreateAccount = async (req, res) => {
 
 export const Login = async (req, res) => {
   const { email, password } = req.body
+  console.log(req.body)
   try {
     Model.find({ email, password }, { password: 0 }, (er, data) => {
       if (er) {
