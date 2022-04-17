@@ -60,6 +60,7 @@ export const Login = async (req, res) => {
 }
 
 export const fetchUsers = async (req, res) => {
+  console.log('fetching users')
   try {
     Model.find({}, (er, data) => {
       if (er) {
