@@ -98,7 +98,8 @@ export const readRequest = async (req, res) => {
 
 export const updateArequest = async (req, res) => {
   try {
-    const { qty, comment, id, status, item, uid } = req.body
+    let { qty, comment, id, status, item, uid } = req.body
+    console.log(req.body)
 
     if (qty === '') {
       return res
@@ -137,6 +138,7 @@ export const updateArequest = async (req, res) => {
       },
     )
   } catch (error) {
+    console.log(error)
     res.status(500).json({ message: 'internal server error!', code: 500 })
   }
 }
