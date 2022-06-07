@@ -4,6 +4,10 @@ import Drugs from '../Drugs/drugs.model.js'
 export const assignErp = async (req, res) => {
   const { uid, entryDate, drugs } = req.body
 
+  /**
+   * check thru all the drugs in the database.
+   */
+
   Drugs.find({}, (er, drugz) => {
     let map = drugs.map((x) => {
       let y = drugz.find((d) => {
@@ -21,6 +25,9 @@ export const assignErp = async (req, res) => {
     } else {
       const newEntry = new Erp({ uid, entryDate, drugs })
       newEntry.save((er, result) => {
+        /**
+         * er here checks if the user exists in the db already!
+         */
         if (er) {
           Erp.findOne({ uid }, (err, _res) => {
             let _drugs = _res.drugs
@@ -31,13 +38,26 @@ export const assignErp = async (req, res) => {
                 return drug.drug === _drug.drug
               }),
             )
-
-            if (x.length === 0) {
+            console.log('length : ', x.length)
+            if (x.length > 0) {
               // update the uid's array.
 
               Erp.updateOne({ uid }, { $push: { drugs } }, (er, _data) => {
                 console.log(`Error_`, er)
                 console.log(`Data : `, _data)
+                // reduce the inventory
+
+                for (let i = 0; i < drugs.length; i++) {
+                  const element = drugs[i]
+                  Drugs.updateOne(
+                    { name: element.drug },
+                    { $inc: { quantity: -element.qty } },
+                    (err, response) => {
+                      console.log('response')
+                    },
+                  )
+                }
+
                 return res.status(200).json({
                   message: 'Update successful!',
                 })
